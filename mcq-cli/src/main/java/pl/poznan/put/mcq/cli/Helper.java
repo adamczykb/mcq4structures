@@ -110,7 +110,7 @@ final class Helper {
   static final Option OPTION_DUMP_RESULT =
       Option.builder("D")
           .longOpt("dump-result")
-          .numberOfArgs(1)
+          .numberOfArgs(0)
           .desc(
               "Dump result in terminal")
           .build();

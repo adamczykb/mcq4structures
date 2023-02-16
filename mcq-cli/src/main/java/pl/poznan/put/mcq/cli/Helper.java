@@ -98,13 +98,6 @@ final class Helper {
           .required()
           .type(File.class)
           .build();
-  static final Option OPTION_DIRECTORY_PRINT =
-      Option.builder("d")
-          .longOpt("directory")
-          .numberOfArgs(1)
-          .desc("Output directory for csv result")
-          .type(File.class)
-          .build();
   static final Option OPTION_RELAXED =
       Option.builder("r")
           .longOpt("relaxed-mode")
@@ -113,6 +106,13 @@ final class Helper {
               "Relaxed mode. 0 = (default) does not compare if any violation is found. 1 = only"
                   + " compare models without violations. 2 = compare everything regardless of any"
                   + " violations")
+          .build();
+  static final Option OPTION_DUMP_RESULT =
+      Option.builder("D")
+          .longOpt("dump-result")
+          .numberOfArgs(1)
+          .desc(
+              "Dump result in terminal")
           .build();
   static final Option OPTION_MULTI_MODEL =
       Option.builder("m")

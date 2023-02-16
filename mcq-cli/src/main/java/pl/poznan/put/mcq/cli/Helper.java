@@ -224,10 +224,6 @@ final class Helper {
     return (File) commandLine.getParsedOptionValue(Helper.OPTION_DIRECTORY.getOpt());
   }
 
-  static File getOutputDirectoryPrint(final CommandLine commandLine) throws ParseException {
-    return (File) commandLine.getParsedOptionValue(Helper.OPTION_DIRECTORY_PRINT.getOpt());
-  }
-
   private static String arrayToString(final Object[] values) {
     if (values.length == 0) {
       return "";

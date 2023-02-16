@@ -90,7 +90,7 @@ public final class Print {
         }
       }
       if (commandLine.hasOption(Helper.OPTION_VERBOSE.getOpt())){
-        System.out.println(csvFile.getAbsolutePath())
+        System.out.println(csvFile.getAbsolutePath());
       }
     } 
   }

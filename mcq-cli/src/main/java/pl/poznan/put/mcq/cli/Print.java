@@ -59,7 +59,7 @@ public final class Print {
     final CommandLineParser parser = new DefaultParser();
     final CommandLine commandLine = parser.parse(Print.OPTIONS, args);
     final List<StructureSelection> models = Helper.loadMultiModelFile(commandLine);
-    if (commandLine.hasOption(Helper.OPTION_DIRECTORY_PRINT.getOpt())){
+    if (commandLine.hasOption(Helper.OPTION_DUMP_RESULT.getOpt())){
     final String angleDescription =
         MoleculeType.RNA.mainAngleTypes().stream()
             .map(angleType -> String.format("%s\t", angleType.exportName()))

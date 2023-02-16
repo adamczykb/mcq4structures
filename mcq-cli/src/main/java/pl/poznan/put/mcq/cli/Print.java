@@ -60,11 +60,8 @@ public final class Print {
     final CommandLine commandLine = parser.parse(Print.OPTIONS, args);
     final List<StructureSelection> models = Helper.loadMultiModelFile(commandLine);
     if (commandLine.hasOption(Helper.OPTION_DUMP_RESULT.getOpt())){
-    final String angleDescription =
-        MoleculeType.RNA.mainAngleTypes().stream()
-            .map(angleType -> String.format("%s\t", angleType.exportName()))
-            .collect(Collectors.joining());
-      System.out.println("Chain\tResNum\tiCode\tName\t" + angleDescription);
+        
+      System.out.println(Print.CSV_HEADER.join);
 
       for (final StructureSelection model : models) {
 

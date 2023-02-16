@@ -98,6 +98,13 @@ final class Helper {
           .required()
           .type(File.class)
           .build();
+  static final Option OPTION_DIRECTORY_PRINT =
+      Option.builder("d")
+          .longOpt("directory")
+          .numberOfArgs(1)
+          .desc("Output directory for csv result")
+          .type(File.class)
+          .build();
   static final Option OPTION_RELAXED =
       Option.builder("r")
           .longOpt("relaxed-mode")
@@ -215,6 +222,10 @@ final class Helper {
 
   static File getOutputDirectory(final CommandLine commandLine) throws ParseException {
     return (File) commandLine.getParsedOptionValue(Helper.OPTION_DIRECTORY.getOpt());
+  }
+
+  static File getOutputDirectoryPrint(final CommandLine commandLine) throws ParseException {
+    return (File) commandLine.getParsedOptionValue(Helper.OPTION_DIRECTORY_PRINT.getOpt());
   }
 
   private static String arrayToString(final Object[] values) {

@@ -36,7 +36,7 @@ public final class Print {
       new Options()
           .addOption(Helper.OPTION_SELECTION_TARGET)
           .addOption(Helper.OPTION_MULTI_MODEL)
-          .addOption(Helper.OPTION_DIRECTORY);
+          .addOption(Helper.OPTION_DIRECTORY_PRINT);
   private static final String[] CSV_HEADER =
       Stream.concat(
               Stream.of("Chain", "ResNum", "iCode", "Name", "Structure"),
@@ -56,16 +56,47 @@ public final class Print {
     final CommandLineParser parser = new DefaultParser();
     final CommandLine commandLine = parser.parse(Print.OPTIONS, args);
     final List<StructureSelection> models = Helper.loadMultiModelFile(commandLine);
-    final File outputDirectory = Helper.getOutputDirectory(commandLine);
+    if (commandLine.hasOption(Print.OPTIONS.OPTION_NAMES.getOpt())){
+    
+      final File outputDirectory = Helper.getOutputDirectory(commandLine);
 
-    FileUtils.forceMkdir(outputDirectory);
+      FileUtils.forceMkdir(outputDirectory);
 
-    for (final StructureSelection model : models) {
-      final File csvFile = new File(outputDirectory, Print.csvFileName(model));
+      for (final StructureSelection model : models) {
+        final File csvFile = new File(outputDirectory, Print.csvFileName(model));
 
-      final CSVFormat format = CSVFormat.Builder.create().setHeader(Print.CSV_HEADER).build();
-      try (final FileWriter writer = new FileWriter(csvFile);
-          final CSVPrinter csvPrinter = new CSVPrinter(writer, format)) {
+        final CSVFormat format = CSVFormat.Builder.create().setHeader(Print.CSV_HEADER).build();
+        try (final FileWriter writer = new FileWriter(csvFile);
+            final CSVPrinter csvPrinter = new CSVPrinter(writer, format)) {
+          final DotBracketFromPdb dotBracket = Print.toDotBracket(model);
+
+          for (final PdbCompactFragment fragment : model.getCompactFragments()) {
+            for (final PdbResidue residue : fragment.residues()) {
+              final ResidueTorsionAngles residueTorsionAngles =
+                  fragment.torsionAngles(residue.identifier());
+
+              csvPrinter.print(residue.chainIdentifier());
+              csvPrinter.print(residue.residueNumber());
+              csvPrinter.print(residue.insertionCode());
+              csvPrinter.print(residue.modifiedResidueName());
+              csvPrinter.print(dotBracket.symbol(residue.identifier()).structure());
+              for (final MasterTorsionAngleType angleType : MoleculeType.RNA.allAngleTypes()) {
+                csvPrinter.print(residueTorsionAngles.value(angleType).degrees());
+              }
+              csvPrinter.println();
+            }
+          }
+        }
+      }
+    }else{
+      final String angleDescription =
+        MoleculeType.RNA.mainAngleTypes().stream()
+            .map(angleType -> String.format("%s\t", angleType.exportName()))
+            .collect(Collectors.joining());
+      System.out.println("Chain\tResNum\tiCode\tName\t" + angleDescription);
+
+      for (final StructureSelection model : models) {
+
         final DotBracketFromPdb dotBracket = Print.toDotBracket(model);
 
         for (final PdbCompactFragment fragment : model.getCompactFragments()) {
@@ -73,15 +104,21 @@ public final class Print {
             final ResidueTorsionAngles residueTorsionAngles =
                 fragment.torsionAngles(residue.identifier());
 
-            csvPrinter.print(residue.chainIdentifier());
-            csvPrinter.print(residue.residueNumber());
-            csvPrinter.print(residue.insertionCode());
-            csvPrinter.print(residue.modifiedResidueName());
-            csvPrinter.print(dotBracket.symbol(residue.identifier()).structure());
+            System.out.print(residue.chainIdentifier());
+            System.out.print('\t');
+            System.out.print(residue.residueNumber());
+            System.out.print('\t');
+            System.out.print(residue.insertionCode());
+            System.out.print('\t');
+            System.out.print(residue.modifiedResidueName());
+            System.out.print('\t');
+            System.out.print(dotBracket.symbol(residue.identifier()).structure());
+            System.out.print('\t');
             for (final MasterTorsionAngleType angleType : MoleculeType.RNA.allAngleTypes()) {
-              csvPrinter.print(residueTorsionAngles.value(angleType).degrees());
+              System.out.print(residueTorsionAngles.value(angleType).degrees());
+              System.out.print('\t');
             }
-            csvPrinter.println();
+            System.out.println();
           }
         }
       }

@@ -107,12 +107,12 @@ final class Helper {
                   + " compare models without violations. 2 = compare everything regardless of any"
                   + " violations")
           .build();
-  static final Option OPTION_DUMP_RESULT =
-      Option.builder("D")
-          .longOpt("dump-result")
+  static final Option OPTION_VERBOSE =
+      Option.builder("v")
+          .longOpt("verbose")
           .numberOfArgs(0)
           .desc(
-              "Dump result in terminal")
+              "Dump files location")
           .build();
   static final Option OPTION_MULTI_MODEL =
       Option.builder("m")
